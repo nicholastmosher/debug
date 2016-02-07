@@ -18,7 +18,9 @@ public class Debug {
      * @param message The mDebug message to print.
      */
     public static void debug(String message) {
-        debug(message, System.out);
+        if(mDebug) {
+            System.out.println("DEBUG (" + getFilename() + ":" + getLineNumber() + ") " +  message);
+        }
     }
 
     /**
@@ -38,7 +40,8 @@ public class Debug {
      * @param error The error to print.
      */
     public static void logError(String error) {
-        logError(error, System.err);
+
+        System.out.println("[ERROR] (" + getFilename() + ":" + getLineNumber() + ") " + error);
     }
 
     /**
@@ -74,7 +77,8 @@ public class Debug {
      * @param message The message to print.
      */
     public static void logInfo(String message) {
-        logInfo(message, System.out);
+
+        System.out.println("[INFO] (" + getFilename() + ":" + getLineNumber() + ") " + message);
     }
 
     /**
