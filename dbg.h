@@ -38,10 +38,14 @@
 #define log_err(M, ...) fprintf(stderr, "[ERROR] (%s:%d: errno %s) " M "\n", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
 #define log_warn(M, ...) fprintf(stderr, "[WARN] (%s:%d: errno %s) " M "\n", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
 #define log_info(M, ...) fprintf(stderr, "[INFO] (%s:%d) " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#define test_pass(M, ...) fprintf(stderr, "[TEST PASS] (%s:%d) " M "\n", __FILE__, __LINE__)
+#define test_fail(M, ...) fprintf(stderr, "[TEST FAIL] (%s:%d) " M "\n", __FILE__, __LINE__)
 #else
 #define log_err(M, ...)
 #define log_warn(M, ...)
 #define log_info(M, ...)
+#define test_pass(M, ...)
+#define test_fail(M, ...)
 #endif
 
 /*
@@ -80,6 +84,12 @@
  *		Behaves the same way as check, but prints on the debug macro instead
  *		of log_err and does not jump to the "error:" tag.
  *
+ * assert(A, M, ...)
+ *		Evaluates that condition A is true. If it is, print [TEST PASS] plus
+ *		the test name M. If condition A is false, print [TEST FAIL] and the
+ *		test name M. Upon a test pass, assert() evaluates to 1, upon a fail
+ *		it evaluates to 0.
+ *
  * Note that the use of check, sentinel, and check_mem all require that an
  * "error:" jump tag be defined within the scope of each function in which
  * they're used. This can be used to return an error code or NULL, as necessary
@@ -98,5 +108,6 @@
 #define sentinel(M, ...) { log_err(M, ##__VA_ARGS__); errno=0; goto error; }
 #define check_mem(A) check((A), "Out of memory.")
 #define check_debug(A, M, ...) if(!(A)) { debug(M, ##__VA_ARGS__); errno=0; goto error; }
+#define assert(A, M, ...) (A ? (test_pass(M, ##__VA_ARGS__) ? 1 : 1) : (test_fail(M, ##__VA_ARGS__) ? 0 : 0))
 
 #endif
