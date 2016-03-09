@@ -38,14 +38,21 @@
 #define log_err(M, ...) fprintf(stderr, "[ERROR] (%s:%d: errno %s) " M "\n", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
 #define log_warn(M, ...) fprintf(stderr, "[WARN] (%s:%d: errno %s) " M "\n", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
 #define log_info(M, ...) fprintf(stderr, "[INFO] (%s:%d) " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
-#define test_pass(M, ...) fprintf(stderr, "[TEST PASS] (%s:%d) " M "\n", __FILE__, __LINE__)
-#define test_fail(M, ...) fprintf(stderr, "[TEST FAIL] (%s:%d) " M "\n", __FILE__, __LINE__)
 #else
 #define log_err(M, ...)
 #define log_warn(M, ...)
 #define log_info(M, ...)
-#define test_pass(M, ...)
-#define test_fail(M, ...)
+#endif
+
+/*
+ * If TEST is defined, print test messages.
+ */
+#ifdef TEST
+#define test_pass(M, ...) fprintf(stderr, "[TEST PASS] (%s:%d) " M "\n", __FILE__, __LINE__)
+#define test_fail(M, ...) fprintf(stderr, "[TEST FAIL] (%s:%d) " M "\n", __FILE__, __LINE__)
+#else
+#define test_pass(M, ...) (1)
+#define test_fail(M, ...) (0)
 #endif
 
 /*
