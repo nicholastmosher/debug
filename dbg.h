@@ -115,6 +115,6 @@
 #define sentinel(M, ...) { log_err(M, ##__VA_ARGS__); errno=0; goto error; }
 #define check_mem(A) check((A), "Out of memory.")
 #define check_debug(A, M, ...) if(!(A)) { debug(M, ##__VA_ARGS__); errno=0; goto error; }
-#define assert(A, M, ...) (A ? (test_pass(M, ##__VA_ARGS__) ? 1 : 1) : (test_fail(M, ##__VA_ARGS__) ? 0 : 0))
+#define assert(A, M, ...) (A ? ((test_pass(M, ##__VA_ARGS__) & 0) | 1) : (test_fail(M, ##__VA_ARGS__) & 0))
 
 #endif
